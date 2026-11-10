@@ -1,9 +1,3 @@
-.env
-.env.*
-!.env.example
-
-*.tmp
-
 __pycache__/
 *.py[cod]
 .venv/
@@ -12,25 +6,9 @@ build/
 dist/
 *.egg-info/
 .eggs/
-
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Per-developer editor and tool state: whatever a contributor's own toolchain
-# writes into the clone, none of which belongs to the SDK.
+.env
+.env.*
 .idea/
 .vscode/
 .DS_Store
-/.remember/
-.mypy_cache/
-.ruff_cache/
-
-logs/
 *.log
-/notes/
-/scratchpad/
-
-# Local analysis output and tooling config: never part of a release.
-/measured_types.json
-/measured_nested.json

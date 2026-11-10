@@ -155,3 +155,11 @@ class SearchResultPage(Dto):
     reinitialise: Reinitialise | None = None
     group_meta: GroupMeta | None = None
     field_metadata: Any = None
+
+
+class SearchReindex(Dto):
+    """The reindex's answer: ``status`` ``accepted``, ``clean`` and a ``message``."""
+
+    status: str | None = None
+    clean: bool | None = None
+    message: str | None = None

@@ -2,4 +2,4 @@
 
 from __future__ import annotations
 
-TAX_SETTINGS = "/api/{api_version}/admin/tax/settings"
+TAX_SETTINGS = "/api/{api_version}/admin/settings/tax"

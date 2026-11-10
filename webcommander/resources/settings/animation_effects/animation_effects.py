@@ -3,14 +3,15 @@ The area is a facade over five sections; a section is a path value."""
 
 from __future__ import annotations
 
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from webcommander.client.api_response import ApiResponse
 from webcommander.dto import Dto
-from webcommander.resources.required_bodies import require_payload
+from webcommander.resources.required_bodies import require_files, require_payload
 from webcommander.resources.settings.animation_effects import animation_effects_urls
 from webcommander.resources.settings.animation_effects.animation_effects_dto import (
     AnimationEffects,
+    CustomLoaderSection,
 )
 
 __all__ = [
@@ -19,6 +20,8 @@ __all__ = [
     "head_animation_effects",
     "get_animation_effects_section",
     "patch_animation_effects_section",
+    "upload_animation_effects_custom_loader",
+    "delete_animation_effects_custom_loader",
 ]
 
 AnimationEffectsPayload = Mapping[str, Any] | str | Dto
@@ -113,4 +116,39 @@ def patch_animation_effects_section(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=AnimationEffects,
+    )
+
+
+def upload_animation_effects_custom_loader(
+    client: Any,
+    files: Mapping[str, Any] | Sequence[tuple[str, Any]],
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse[CustomLoaderSection]:
+    """Upload the custom preloader image; the part is ``file`` (svg, png, jpg, jpeg or gif), and a
+    ``str`` is contents, not a path. ``201``, and the loader reads ``enabled: true``.
+    ``POST /admin/settings/animation_effects/custom_loader``"""
+    require_files(files, "invalid_request")
+    return client.send_post_request(
+        animation_effects_urls.ANIMATION_EFFECTS_CUSTOM_LOADER,
+        files=files,
+        raise_on_error=raise_on_error,
+        response_format=response_format,
+        dto_type=CustomLoaderSection,
+    )
+
+
+def delete_animation_effects_custom_loader(
+    client: Any,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse:
+    """Remove the custom preloader image; ``204``, also when there is none.
+    ``DELETE /admin/settings/animation_effects/custom_loader``"""
+    return client.send_delete_request(
+        animation_effects_urls.ANIMATION_EFFECTS_CUSTOM_LOADER,
+        raise_on_error=raise_on_error,
+        response_format=response_format,
     )

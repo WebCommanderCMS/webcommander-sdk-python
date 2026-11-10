@@ -97,6 +97,7 @@ class ProductVariantPricing(Dto):
     base_price: float | None = None
     cost_price: float | None = None
     sale_price: float | None = None
+    compare_at_price: float | None = None
     is_on_sale: bool | None = None
     sale_amount_type: str | None = None
     hide_price: bool | None = None
@@ -268,3 +269,61 @@ class ProductVariationsImportResult(Dto):
     status: str | None = None
     message: str | None = None
     total_variants: int | None = None
+
+
+class ProductVariantDetail(Dto):
+    """One variant read alone, under ``variation``. It is on or off as ``active``, where the list
+    and the bulk write say ``available``; ``options`` name one label per type."""
+
+    ENVELOPE_KEY = "variation"
+
+    variation_id: int | None = None
+    name: str | None = None
+    sku: str | None = None
+    custom_sku: str | None = None
+    barcode: str | None = None
+    country_of_origin: str | None = None
+    hs_code: str | None = None
+    active: bool | None = None
+    options: list[ProductVariantOptionReference | None] | None = None
+    pricing: ProductVariantPricing | None = None
+    inventory: ProductVariantInventory | None = None
+    ordering: ProductVariantOrdering | None = None
+    transaction_no: str | None = None
+    url: str | None = None
+
+
+class ProductVariantPatchInput(Dto):
+    """The single-variant patch's body, no envelope; partial. The variant is turned on or off as
+    ``available``."""
+
+    available: bool | None = None
+    name: str | None = None
+    sku: str | None = None
+    custom_sku: str | None = None
+    barcode: str | None = None
+    country_of_origin: str | None = None
+    hs_code: str | None = None
+    pricing: ProductVariantPricing | None = None
+    inventory: ProductVariantInventory | None = None
+    ordering: ProductVariantOrdering | None = None
+
+
+class ProductVariantPatched(Dto):
+    """The variant as the single-variant patch answers it: its ids and codes."""
+
+    variation_id: int | None = None
+    name: str | None = None
+    sku: str | None = None
+    custom_sku: str | None = None
+    barcode: str | None = None
+    country_of_origin: str | None = None
+    hs_code: str | None = None
+
+
+class ProductVariantPatchResult(Dto):
+    """The single-variant patch's answer: ``status``, ``message`` and the ``variation``."""
+
+    status: str | None = None
+    message: str | None = None
+    variation: ProductVariantPatched | None = None

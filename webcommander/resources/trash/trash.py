@@ -11,6 +11,7 @@ from webcommander.resources.trash import trash_urls
 from webcommander.resources.trash.trash_dto import (
     TrashBulkDeleteResult,
     TrashBulkRestoreResult,
+    TrashExternalLinks,
     TrashItem,
     TrashPage,
     TrashTypeList,
@@ -25,6 +26,7 @@ __all__ = [
     "delete_trash_item",
     "bulk_restore_trash",
     "bulk_delete_trash",
+    "get_trash_item_external_links",
 ]
 
 TrashBulkPayload = Mapping[str, Any] | str | Dto
@@ -173,4 +175,24 @@ def bulk_delete_trash(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TrashBulkDeleteResult,
+    )
+
+
+def get_trash_item_external_links(
+    client: Any,
+    trash_type: str,
+    trash_item_id: int | str,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse[TrashExternalLinks]:
+    """The links outside the store that a permanent delete of a trashed item would break; ``404``
+    for an item that is not in the trash.
+    ``GET /admin/trash/{trash_type}/{trash_item_id}/external_links``"""
+    return client.send_get_request(
+        trash_urls.TRASH_ITEM_EXTERNAL_LINKS,
+        path_params={"trash_type": trash_type, "trash_item_id": trash_item_id},
+        raise_on_error=raise_on_error,
+        response_format=response_format,
+        dto_type=TrashExternalLinks,
     )

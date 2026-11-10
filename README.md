@@ -167,14 +167,14 @@ Every exception the SDK raises is an `SdkError` subclass.
 
 ## Resources
 
-The client exposes 46 resources with 349 operations. The method, path and behaviour of each
+The client exposes 56 resources with 436 operations. The method, path and behaviour of each
 one are in the [API reference](https://newlify.mintlify.app).
 
 | Resource | Client accessor | Operations |
 |---|---|---:|
 | Customers | `client.admin_customers` | 15 |
 | Aliases | `client.aliases` | 4 |
-| Animation effects settings | `client.animation_effects` | 5 |
+| Animation effects settings | `client.animation_effects` | 7 |
 | Blog categories | `client.blog_categories` | 5 |
 | Blogs | `client.blogs` | 12 |
 | Carts | `client.carts` | 7 |
@@ -187,24 +187,34 @@ one are in the [API reference](https://newlify.mintlify.app).
 | Currencies | `client.currencies` | 11 |
 | Customer groups | `client.customer_groups` | 9 |
 | Customer portal settings | `client.customer_portal` | 5 |
+| Dashboard banners | `client.dashboard_banners` | 6 |
+| Dashboard KPIs | `client.dashboard_kpis` | 3 |
+| Dashboard reports | `client.dashboard_reports` | 6 |
+| Dashboard sections | `client.dashboard_sections` | 1 |
+| Dashboards | `client.dashboards` | 5 |
 | Discount profiles | `client.discount_profiles` | 7 |
 | Ecommerce settings | `client.ecommerce_settings` | 5 |
 | Email | `client.email` | 1 |
+| Gift cards | `client.gift_cards` | 1 |
 | Inventory locations | `client.inventory_locations` | 11 |
 | Order custom fields | `client.order_custom_fields` | 4 |
 | Order flags | `client.order_flags` | 7 |
+| Order previews | `client.order_previews` | 7 |
 | Orders | `client.orders` | 25 |
 | Pages | `client.pages` | 15 |
 | Payment gateways | `client.payment_gateways` | 8 |
 | Price display settings | `client.price_display_settings` | 5 |
 | Product listing settings | `client.product_listing` | 3 |
 | Product page settings | `client.product_page` | 5 |
-| Products | `client.products` | 10 |
-| Search result page settings | `client.search_result_page` | 13 |
+| Products | `client.products` | 27 |
+| Search result page settings | `client.search_result_page` | 14 |
 | Search settings | `client.search_settings` | 9 |
 | SEO configuration | `client.seo_configuration` | 18 |
 | Shipping classes | `client.shipping_classes` | 9 |
 | Shipping methods | `client.shipping_methods` | 9 |
+| Shipping profiles | `client.shipping_profiles` | 11 |
+| Shipping rates | `client.shipping_rates` | 10 |
+| Shipping rules | `client.shipping_rules` | 10 |
 | Shipping settings | `client.shipping_settings` | 3 |
 | Shopping cart settings | `client.shopping_cart` | 5 |
 | Site settings | `client.site_settings` | 5 |
@@ -213,11 +223,11 @@ one are in the [API reference](https://newlify.mintlify.app).
 | Tax custom profiles | `client.tax_custom_profiles` | 5 |
 | Tax profiles | `client.tax_profiles` | 7 |
 | Tax rules | `client.tax_rules` | 7 |
-| Tax settings | `client.tax_settings` | 2 |
+| Tax settings | `client.tax_settings` | 4 |
 | Tax zones | `client.tax_zones` | 7 |
 | Transactions | `client.transactions` | 6 |
-| Trash | `client.trash` | 8 |
-| Variations | `client.variations` | 12 |
+| Trash | `client.trash` | 9 |
+| Variations | `client.variations` | 16 |
 
 `client.list_resource_names()` returns every accessor name,
 `help(client.admin_customers.get_customers)` prints an endpoint's docstring, and

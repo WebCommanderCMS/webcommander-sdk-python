@@ -9,6 +9,8 @@ from webcommander.dto import Dto
 from webcommander.resources.required_bodies import require_payload
 from webcommander.resources.variations import variations_urls
 from webcommander.resources.variations.variations_dto import (
+    ProductVariantDetail,
+    ProductVariantPatchResult,
     ProductVariations,
     ProductVariationsBulkResult,
     ProductVariationsImportResult,
@@ -29,6 +31,10 @@ __all__ = [
     "list_product_variations",
     "import_product_variations",
     "update_product_variations",
+    "get_product_variation",
+    "delete_product_variation",
+    "patch_product_variation",
+    "delete_product_variations",
 ]
 
 VariationPayload = Mapping[str, Any] | str | Dto
@@ -266,4 +272,82 @@ def update_product_variations(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=ProductVariationsBulkResult,
+    )
+
+
+def get_product_variation(
+    client: Any,
+    product_id: int | str,
+    variation_id: int | str,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse[ProductVariantDetail]:
+    """Read one variant under ``variation`` —
+    ``GET /admin/products/{product_id}/variations/{variation_id}``. ``variation_id`` is a variant's
+    ``variation_id``, the ``id`` the list also carries; it is not the variant's own ``product_id``.
+    It reads ``active`` where the list reads ``available``."""
+    return client.send_get_request(
+        variations_urls.PRODUCT_VARIATION,
+        path_params={"product_id": product_id, "variation_id": variation_id},
+        raise_on_error=raise_on_error,
+        response_format=response_format,
+        dto_type=ProductVariantDetail,
+    )
+
+
+def delete_product_variation(
+    client: Any,
+    product_id: int | str,
+    variation_id: int | str,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse:
+    """Delete one variant; ``204``, and a second delete is ``404``. ``variation_id`` is a variant's
+    ``variation_id``. ``DELETE /admin/products/{product_id}/variations/{variation_id}``"""
+    return client.send_delete_request(
+        variations_urls.PRODUCT_VARIATION,
+        path_params={"product_id": product_id, "variation_id": variation_id},
+        raise_on_error=raise_on_error,
+        response_format=response_format,
+    )
+
+
+def patch_product_variation(
+    client: Any,
+    product_id: int | str,
+    variation_id: int | str,
+    payload: VariationPayload,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse[ProductVariantPatchResult]:
+    """Change one variant; a bare, partial body. A SKU another variant holds is ``409``.
+    ``PATCH /admin/products/{product_id}/variations/{variation_id}``"""
+    require_payload(payload)
+    return client.send_patch_request(
+        variations_urls.PRODUCT_VARIATION,
+        path_params={"product_id": product_id, "variation_id": variation_id},
+        json_body=payload,
+        raise_on_error=raise_on_error,
+        response_format=response_format,
+        dto_type=ProductVariantPatchResult,
+    )
+
+
+def delete_product_variations(
+    client: Any,
+    product_id: int | str,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse:
+    """Delete every variant of a product; ``204``, also when it has none.
+    ``DELETE /admin/products/{product_id}/variations``"""
+    return client.send_delete_request(
+        variations_urls.PRODUCT_VARIATIONS,
+        path_params={"product_id": product_id},
+        raise_on_error=raise_on_error,
+        response_format=response_format,
     )

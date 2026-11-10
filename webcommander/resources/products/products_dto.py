@@ -332,7 +332,10 @@ class ProductReviewer(Dto):
 
 class ProductReview(Dto):
     """One review. ``product_id``, ``comment`` and ``created_at`` repeat ``productId``, ``review``
-    and ``date``; ``created_at`` carries a ``Z``."""
+    and ``date``; ``created_at`` carries a ``Z``. A single review answers under ``review``, which
+    inside a row is its text."""
+
+    ENVELOPE_KEY = "review"
 
     id: int | None = None
     productId: int | None = None
@@ -976,3 +979,371 @@ class ProductStockInput(Dto):
 
     note: str | None = None
     locations: list[ProductStockLocationInput | None] | None = None
+
+
+class ProductCount(Dto):
+    """The count's answer; ``count`` repeats ``total``."""
+
+    total: int | None = None
+    count: int | None = None
+
+
+class ProductSkuHolder(Dto):
+    """The product that holds a SKU; ``status`` is ``trashed`` for one in the trash."""
+
+    id: int | None = None
+    name: str | None = None
+    status: str | None = None
+
+
+class ProductSkuCheck(Dto):
+    """A SKU's verdict: ``available`` and ``is_exist`` are opposites, ``product`` and ``id`` name the
+    holder and are ``null`` or absent when the SKU is free. A variant's SKU names the variant's own
+    product."""
+
+    available: bool | None = None
+    is_exist: bool | None = None
+    product: ProductSkuHolder | None = None
+    id: int | None = None
+
+
+class ProductSpecial(Dto):
+    """One row of a special listing: a product's storefront prices."""
+
+    id: int | None = None
+    sku: str | None = None
+    name: str | None = None
+    image: str | None = None
+    base_price: float | None = None
+    is_on_sale: bool | None = None
+    on_sale_amount_type: str | None = None
+    effective_price: float | None = None
+    actual_base_price: float | None = None
+    on_sale_amount: float | None = None
+    expect_to_pay_price: float | None = None
+    expect_to_pay_price_with_tax: float | None = None
+    tax_exclusive_base_price: float | None = None
+    tax_exclusive_sale_price: float | None = None
+    tax: float | None = None
+    previous_price_to_display: float | None = None
+    actual_price_to_display: float | None = None
+    sale_price: float | None = None
+    updated: str | None = None
+    url: str | None = None
+    summary: str | None = None
+    description: str | None = None
+
+
+class ProductSpecialPage(Dto):
+    """A special listing. ``max`` is the page size applied; ``status`` is ``success`` on a
+    per-customer answer with no rows, and absent otherwise."""
+
+    status: str | None = None
+    total: int | None = None
+    max: int | None = None
+    offset: int | None = None
+    products: list[ProductSpecial | None] | None = None
+    pagination: Pagination | None = None
+
+
+class ProductsBulkDeleteInput(Dto):
+    """The bulk delete's body, no envelope: ``ids`` is required and must not be empty."""
+
+    ids: list[int | None] | None = None
+
+
+class ProductBulkDeleteError(Dto):
+    """One id the bulk delete did not trash; ``reason`` is ``not_found`` for an unknown id."""
+
+    id: int | None = None
+    reason: str | None = None
+
+
+class ProductsBulkDeleteResult(Dto):
+    """The bulk delete's answer, ``200`` even when an id failed: counts, and the failed ids."""
+
+    deleted: int | None = None
+    failed: int | None = None
+    errors: list[ProductBulkDeleteError | None] | None = None
+
+
+class ProductReviewList(Dto):
+    """One product's reviews; the listing has no paging block."""
+
+    reviews: list[ProductReview | None] | None = None
+
+
+class ProductReviewPatchInput(Dto):
+    """The review moderation body, no envelope; ``status`` is ``pending`` or ``approved``."""
+
+    status: str | None = None
+    rating: float | None = None
+    comment: str | None = None
+
+
+class ProductImageFileInput(Dto):
+    """One image to store: ``filename`` and its ``base64`` content."""
+
+    filename: str | None = None
+    base64: str | None = None
+
+
+class ProductImageAndVideoInput(Dto):
+    """The ``image_and_video`` block of an image upload."""
+
+    images: list[ProductImageFileInput | None] | None = None
+
+
+class ProductImageUploadInput(Dto):
+    """The image upload's body, ``{"product": {"image_and_video": {"images": [...]}}}``."""
+
+    ENVELOPE_KEY = "product"
+
+    image_and_video: ProductImageAndVideoInput | None = None
+
+
+class ProductMediaUploaded(Dto):
+    """What ``create_product_image`` answers: ``product`` holds the files just stored,
+    ``transaction_no`` is the product's own."""
+
+    product: ProductImageAndVideo | None = None
+    transaction_no: str | None = None
+
+
+class ProductMediaUploadInput(Dto):
+    """The media upload's body, no envelope: ``type`` (only ``images`` is accepted), ``filename``
+    and ``content``, base64 or a ``data:`` URI, and an optional 1-based ``position``."""
+
+    type: str | None = None
+    filename: str | None = None
+    content: str | None = None
+    position: int | None = None
+
+
+class ProductInventoryStockInput(Dto):
+    """The stock figures a top-up writes."""
+
+    track_inventory: bool | None = None
+    available_stock: int | None = None
+    low_level_stock: int | None = None
+
+
+class ProductInventoryInput(Dto):
+    """The top-up's body, ``{"product": {"product_pricing_and_stock": {...}}}``."""
+
+    ENVELOPE_KEY = "product"
+
+    product_pricing_and_stock: ProductInventoryStockInput | None = None
+
+
+class ProductInventoryResult(Dto):
+    """The top-up's answer. ``transaction_no`` is the product's own from before the write, ``null``
+    on its first top-up, though the header is stored on the product by then."""
+
+    status: str | None = None
+    message: str | None = None
+    transaction_no: str | None = None
+
+
+class ProductMediaOrderInput(Dto):
+    """The media order body, no envelope: ``type`` ``images`` and every image's ``id`` once, in
+    the order wanted."""
+
+    type: str | None = None
+    ids: list[int | None] | None = None
+
+
+class ProductMediaOrder(Dto):
+    """The media order's answer: the product's images in their new order."""
+
+    images: list[ProductMediaImage | None] | None = None
+
+
+class ProductMediaImagePatchInput(Dto):
+    """The image move body, no envelope: the 1-based ``position``, the only field it takes."""
+
+    position: int | None = None
+
+
+class ProductSeoAdvancedSettings(Dto):
+    """The robots and canonical URL settings."""
+
+    enabled: bool | None = None
+    robots_meta: str | None = None
+    canonical_url: str | None = None
+
+
+class ProductSeoGoogleAnalyticsEvents(Dto):
+    """Which Google Analytics events the product page sends."""
+
+    enabled: bool | None = None
+    view_item: bool | None = None
+    view_item_list: bool | None = None
+    view_cart: bool | None = None
+    add_to_wish_list: bool | None = None
+    remove_from_cart: bool | None = None
+    begin_checkout: bool | None = None
+    add_shipping_info: bool | None = None
+    add_payment_info: bool | None = None
+    purchase: bool | None = None
+
+
+class ProductSeoGoogleAnalytics(Dto):
+    """Google Analytics on the product page."""
+
+    enabled: bool | None = None
+    measurement_id: str | None = None
+    events: ProductSeoGoogleAnalyticsEvents | None = None
+
+
+class ProductSeoFacebookPixelEvents(Dto):
+    """Which Facebook Pixel events the product page sends."""
+
+    enabled: bool | None = None
+    search: bool | None = None
+    add_to_cart: bool | None = None
+    add_to_wish_list: bool | None = None
+    initiate_checkout: bool | None = None
+    add_payment_info: bool | None = None
+    purchase: bool | None = None
+
+
+class ProductSeoFacebookPixel(Dto):
+    """The Facebook Pixel on the product page."""
+
+    enabled: bool | None = None
+    pixel_id: str | None = None
+    events: ProductSeoFacebookPixelEvents | None = None
+
+
+class ProductSeoGoogleAds(Dto):
+    """The Google Ads conversion the product page reports."""
+
+    conversion_id: str | None = None
+    conversion_label: str | None = None
+
+
+class ProductSeoAnalytics(Dto):
+    """The product page's analytics settings."""
+
+    enabled: bool | None = None
+    platform: str | None = None
+    google_analytics: ProductSeoGoogleAnalytics | None = None
+    facebook_pixel: ProductSeoFacebookPixel | None = None
+    google_ads: ProductSeoGoogleAds | None = None
+
+
+class ProductSeoCode(Dto):
+    """One custom code block and whether it is on."""
+
+    enabled: bool | None = None
+    code: str | None = None
+
+
+class ProductSeoCustomCode(Dto):
+    """The custom code added to the product page's header and footer."""
+
+    header: ProductSeoCode | None = None
+    footer: ProductSeoCode | None = None
+
+
+class ProductSeoSocialCard(Dto):
+    """The title, description and image one network shows for the product."""
+
+    title: str | None = None
+    description: str | None = None
+    image_url: str | None = None
+
+
+class ProductSeoSocial(Dto):
+    """The product's social card, and one per network."""
+
+    title: str | None = None
+    description: str | None = None
+    image_url: str | None = None
+    facebook: ProductSeoSocialCard | None = None
+    twitter: ProductSeoSocialCard | None = None
+    linkedin: ProductSeoSocialCard | None = None
+
+
+class ProductSeoAiVisibility(Dto):
+    """What the product offers AI search; each field is ``null`` until set."""
+
+    structured_attributes: Any = None
+    product_faq: Any = None
+    citability_score: Any = None
+    json_ld: Any = None
+
+
+class ProductSeo(Dto):
+    """A product's SEO sub-resource, under ``seo``."""
+
+    ENVELOPE_KEY = "seo"
+
+    url_handle: str | None = None
+    title: str | None = None
+    description: str | None = None
+    advanced_settings: ProductSeoAdvancedSettings | None = None
+    analytics: ProductSeoAnalytics | None = None
+    custom_code: ProductSeoCustomCode | None = None
+    social: ProductSeoSocial | None = None
+    ai_visibility: ProductSeoAiVisibility | None = None
+
+
+class ProductStockTracking(Dto):
+    """A product's stock figure and low-stock level, with whether tracking is on."""
+
+    enabled: bool | None = None
+    available_stock: int | None = None
+    low_stock_level: int | None = None
+
+
+class ProductStockSummary(Dto):
+    """The stock block of the stock patch's answer."""
+
+    tracking: ProductStockTracking | None = None
+    multi_location_enabled: bool | None = None
+    locations: list[ProductStockLocation | None] | None = None
+    variations: list[ProductStockVariation | None] | None = None
+
+
+class ProductStockAdjustmentUser(Dto):
+    """The admin who made a stock change."""
+
+    id: int | None = None
+    name: str | None = None
+
+
+class ProductStockAdjustment(Dto):
+    """One stock change; ``delta`` is the new figure minus the old."""
+
+    id: int | None = None
+    delta: int | None = None
+    note: str | None = None
+    transaction_no: str | None = None
+    created_by: ProductStockAdjustmentUser | None = None
+    created_at: str | None = None
+
+
+class ProductStockPatchInput(Dto):
+    """The stock patch's body, no envelope. ``tracking`` merges; ``locations`` sets the stock
+    per location; ``note`` and ``transaction_no`` go on the adjustment."""
+
+    tracking: ProductStockTracking | None = None
+    locations: list[ProductStockLocationInput | None] | None = None
+    note: str | None = None
+    transaction_no: str | None = None
+
+
+class ProductStockPatchResult(Dto):
+    """The stock patch's answer: the stock now, and the adjustment it recorded."""
+
+    stock: ProductStockSummary | None = None
+    adjustment: ProductStockAdjustment | None = None
+
+
+class ProductStockAdjustmentPage(Dto):
+    """One page of a product's stock history."""
+
+    adjustments: list[ProductStockAdjustment | None] | None = None
+    pagination: Pagination | None = None

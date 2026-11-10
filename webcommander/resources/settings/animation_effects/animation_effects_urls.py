@@ -4,3 +4,6 @@ from __future__ import annotations
 
 ANIMATION_EFFECTS = "/api/{api_version}/admin/settings/animation_effects"
 ANIMATION_EFFECTS_SECTION = "/api/{api_version}/admin/settings/animation_effects/{section}"
+ANIMATION_EFFECTS_CUSTOM_LOADER = (
+    "/api/{api_version}/admin/settings/animation_effects/custom_loader"
+)

@@ -84,3 +84,22 @@ class TrashBulkInput(Dto):
     """The bulk body, ``{"items": [...]}``, 1 to 100 items; no envelope."""
 
     items: list[TrashBulkItemInput | None] | None = None
+
+
+class TrashExternalLink(Dto):
+    """One link outside the store: the ``system``, its ``entity`` and ``external_id``, a ``name``
+    and the ``reason`` it blocks a permanent delete."""
+
+    system: str | None = None
+    entity: str | None = None
+    name: str | None = None
+    external_id: str | None = None
+    reason: str | None = None
+
+
+class TrashExternalLinks(Dto):
+    """The external links of one trashed item: its ``type`` and ``id``, and ``links``."""
+
+    type: str | None = None
+    id: int | None = None
+    links: list[TrashExternalLink | None] | None = None

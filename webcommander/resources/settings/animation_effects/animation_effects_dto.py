@@ -15,6 +15,12 @@ class CustomLoader(Dto):
     file_url: str | None = None
 
 
+class CustomLoaderSection(Dto):
+    """The ``custom_loader`` section: the uploaded preloader image, or ``enabled: false``."""
+
+    custom_loader: CustomLoader | None = None
+
+
 class PreloaderPage(Dto):
     """One entry of ``preloader_custom_page`` as a read sends it; a write takes page ids."""
 

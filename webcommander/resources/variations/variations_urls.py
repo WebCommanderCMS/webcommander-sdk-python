@@ -8,6 +8,7 @@ VARIATION_OPTION = (
     "/api/{api_version}/admin/variations/{variation_id}/options/{variation_option_id}"
 )
 PRODUCT_VARIATIONS = "/api/{api_version}/admin/products/{product_id}/variations"
+PRODUCT_VARIATION = "/api/{api_version}/admin/products/{product_id}/variations/{variation_id}"
 PRODUCT_VARIATIONS_BULK = "/api/{api_version}/admin/products/{product_id}/variations/bulk"
 
 #: Tags a write with a transaction number; it wins over a body ``transaction_no`` it disagrees with.

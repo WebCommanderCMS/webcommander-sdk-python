@@ -15,16 +15,19 @@ class ProfileReference(Dto):
 
 
 class AreaMeta(Dto):
-    """The single ``group_meta`` entry: what the area is and whether it can be written."""
+    """One ``group_meta`` entry: what the area is, whether it can be written, and its path."""
 
     kind: str | None = None
     writable: bool | None = None
+    href: str | None = None
 
 
 class GroupMeta(Dto):
-    """The ``group_meta`` block — a single :class:`AreaMeta`, keyed by the area itself."""
+    """The ``group_meta`` block: the settings area and the two collections beside it."""
 
     shipping_settings: AreaMeta | None = None
+    shipping_methods: AreaMeta | None = None
+    shipping_classes: AreaMeta | None = None
 
 
 class ShippingSettings(Dto):
@@ -34,11 +37,11 @@ class ShippingSettings(Dto):
     ENVELOPE_KEY = "shipping_settings"
 
     default_shipping_profile: ProfileReference | None = None
-    enable_shipping_default_tax: bool | None = None
+    apply_store_tax_settings_to_shipping: bool | None = None
     default_delivery_profile: ProfileReference | None = None
-    enable_delivery_default_tax: bool | None = None
+    apply_store_tax_settings_to_delivery: bool | None = None
     shipping_tax_profile: ProfileReference | None = None
     enable_shipping_class: bool | None = None
-    enable_flat_view_class: bool | None = None
+    enable_class_in_flat_view: bool | None = None
     group_meta: GroupMeta | None = None
     field_metadata: Any = None

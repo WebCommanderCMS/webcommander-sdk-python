@@ -1,5 +1,6 @@
-"""Shipping settings endpoints, under ``/api/{api_version}/admin/settings/shipping_settings``.
-The area is flat: its seven keys are fields, not sections."""
+"""Shipping settings endpoints, under
+``/api/{api_version}/admin/settings/shipping_settings/general``. The area is flat: its seven keys
+are fields, not sections."""
 
 from __future__ import annotations
 
@@ -27,7 +28,8 @@ def get_shipping_settings(
     raise_on_error: bool | None = None,
     response_format: str | None = None,
 ) -> ApiResponse[ShippingSettings]:
-    """Read the whole area — ``GET /admin/settings/shipping_settings``; seven fields, flat."""
+    """Read the whole area — ``GET /admin/settings/shipping_settings/general``; seven fields,
+    flat."""
     return client.send_get_request(
         shipping_settings_urls.SHIPPING_SETTINGS,
         query_params=query_params,
@@ -44,8 +46,8 @@ def patch_shipping_settings(
     raise_on_error: bool | None = None,
     response_format: str | None = None,
 ) -> ApiResponse[ShippingSettings]:
-    """Write one field or several — ``PATCH /admin/settings/shipping_settings``, wrapped or bare.
-    Turning ``enable_shipping_class`` off also clears ``enable_flat_view_class``; write both."""
+    """Write one field or several — ``PATCH /admin/settings/shipping_settings/general``, wrapped
+    or bare. Turning ``enable_shipping_class`` off also clears ``enable_class_in_flat_view``."""
     require_payload(payload)
     return client.send_patch_request(
         shipping_settings_urls.SHIPPING_SETTINGS,
@@ -62,7 +64,8 @@ def head_shipping_settings(
     raise_on_error: bool | None = None,
     response_format: str | None = None,
 ) -> ApiResponse:
-    """Ask whether the area is reachable — ``HEAD /admin/settings/shipping_settings``; no body."""
+    """Ask whether the area is reachable — ``HEAD /admin/settings/shipping_settings/general``;
+    no body."""
     return client.send_api_request(
         "HEAD",
         shipping_settings_urls.SHIPPING_SETTINGS,

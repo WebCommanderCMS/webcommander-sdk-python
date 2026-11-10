@@ -12,10 +12,12 @@ from webcommander.resources.required_bodies import require_payload
 from webcommander.resources.settings.page_settings import search_result_page_urls
 from webcommander.resources.settings.page_settings.search_result_page_dto import (
     ProductPromotion,
+    SearchReindex,
     SearchResultPage,
 )
 
 __all__ = [
+    "reindex_search",
     "get_search_result_page",
     "patch_search_result_page",
     "head_search_result_page",
@@ -273,4 +275,20 @@ def delete_search_result_page_product_promotion(
         path_params={"promotion_id": promotion_id},
         raise_on_error=raise_on_error,
         response_format=response_format,
+    )
+
+
+def reindex_search(
+    client: Any,
+    *,
+    raise_on_error: bool | None = None,
+    response_format: str | None = None,
+) -> ApiResponse[SearchReindex]:
+    """Rebuild the store's search index; ``202`` once it has started, with no body to send.
+    ``POST /admin/search/reindex``"""
+    return client.send_post_request(
+        search_result_page_urls.SEARCH_REINDEX,
+        raise_on_error=raise_on_error,
+        response_format=response_format,
+        dto_type=SearchReindex,
     )
