@@ -439,6 +439,7 @@ class WebCommanderClient:
                     config.client_secret,
                     config.auth_string,
                     config.grant_type,
+                    config.auth_base_url or "",
                 ),
             )
         return MemoryTokenStore()

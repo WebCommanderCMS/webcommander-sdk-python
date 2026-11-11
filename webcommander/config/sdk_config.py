@@ -316,6 +316,11 @@ class SdkConfig:
         return self.auth.auth_string
 
     @property
+    def auth_base_url(self) -> str | None:
+        """The Hykmah origin that issues the token, or ``None`` for the store, from :attr:`auth`."""
+        return self.auth.auth_base_url
+
+    @property
     def client_name(self) -> str:
         """This instance's label, from :attr:`auth`."""
         return self.auth.client_name

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, fields, replace
+from dataclasses import KW_ONLY, dataclass, fields, replace
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -24,6 +24,13 @@ REQUIRED_FIELDS = (
     "client_secret",
     "redirect_uri",
     "auth_string",
+)
+
+#: Required when ``auth_base_url`` is set: Hykmah issues the token from the client alone.
+HYKMAH_REQUIRED_FIELDS = (
+    "base_url",
+    "client_id",
+    "client_secret",
 )
 
 _TEXT_FIELDS = REQUIRED_FIELDS + ("client_name", "grant_type")
@@ -47,16 +54,26 @@ class AuthConfig:
     base_url: str
     client_id: str
     client_secret: str
-    redirect_uri: str
-    auth_string: str
-    # Required, and sixth: callers pass the five credentials above positionally.
+    #: Required by the store token endpoint; unused when ``auth_base_url`` is set.
+    redirect_uri: str = ""
+    auth_string: str = ""
+    # Keyword-only from here: callers pass the five credentials above positionally.
+    _: KW_ONLY
     client_name: str
 
     grant_type: str = DEFAULT_GRANT_TYPE
     token_cache_path: Any = USE_DEFAULT_TOKEN_CACHE
+    #: The Hykmah origin that issues the token; ``None`` asks the store at ``base_url``.
+    auth_base_url: str | None = None
+
+    @property
+    def uses_hykmah(self) -> bool:
+        """Whether the token comes from Hykmah rather than from the store itself."""
+        return self.auth_base_url is not None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "base_url", _normalise_base_url(self.base_url))
+        object.__setattr__(self, "auth_base_url", _normalise_auth_base_url(self.auth_base_url))
         object.__setattr__(self, "token_cache_path", snapshot_a_path(self.token_cache_path))
         # Validated first: resolving the sentinel creates a directory a bad config should not leave.
         self._validate()
@@ -84,9 +101,16 @@ class AuthConfig:
                 mistyped.add(name)
                 problems.append(f"{name}: expected a string, got {type(value).__name__}")
 
+        if self.auth_base_url is not None and not isinstance(self.auth_base_url, str):
+            mistyped.add("auth_base_url")
+            problems.append(
+                f"auth_base_url: expected a string or None, got {type(self.auth_base_url).__name__}"
+            )
+
+        required = HYKMAH_REQUIRED_FIELDS if self.auth_base_url is not None else REQUIRED_FIELDS
         missing = [
             name
-            for name in REQUIRED_FIELDS
+            for name in required
             if name not in mistyped and not str(getattr(self, name) or "").strip()
         ]
         if missing:
@@ -94,6 +118,9 @@ class AuthConfig:
 
         if self.base_url and "base_url" not in mistyped:
             problems.extend(_problems_with_the_base_url(self.base_url))
+
+        if self.auth_base_url and "auth_base_url" not in mistyped:
+            problems.extend(_problems_with_the_base_url(self.auth_base_url, "auth_base_url"))
 
         for name in ("client_name", "grant_type"):
             if name not in mistyped and not str(getattr(self, name) or "").strip():
@@ -152,27 +179,35 @@ def _normalise_base_url(raw_value: Any) -> Any:
     return raw_value.strip().rstrip("/")
 
 
-def _problems_with_the_base_url(base_url: str) -> list[str]:
+def _normalise_auth_base_url(raw_value: Any) -> Any:
+    """Trim the Hykmah origin; blank means not set, so an empty ``.env`` entry keeps the store
+    flow. A value of the wrong type goes back for ``_validate`` to report."""
+    if not isinstance(raw_value, str):
+        return raw_value
+    return raw_value.strip().rstrip("/") or None
+
+
+def _problems_with_the_base_url(base_url: str, name: str = "base_url") -> list[str]:
     try:
         parsed = urlparse(base_url)
     except ValueError as error:
-        return [f"base_url: is not a URL ({error})"]
+        return [f"{name}: is not a URL ({error})"]
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         return [
-            f"base_url: must start with http:// or https:// and include a host, "
+            f"{name}: must start with http:// or https:// and include a host, "
             f"got {redact_text(base_url)!r}"
         ]
     problems = []
     if parsed.username is not None or parsed.password is not None:
         # Not echoed: it holds a password.
         problems.append(
-            f"base_url: host {parsed.hostname} carries embedded credentials, which "
+            f"{name}: host {parsed.hostname} carries embedded credentials, which "
             f"would replace the bearer token; strip the userinfo"
         )
     if parsed.query or parsed.fragment or parsed.params:
         # Paths are concatenated, so anything after the host lands inside the query.
         problems.append(
-            "base_url: must be the instance origin only, with no query string or "
+            f"{name}: must be the origin only, with no query string or "
             f"fragment, got {redact_text(base_url)!r}"
         )
     return problems

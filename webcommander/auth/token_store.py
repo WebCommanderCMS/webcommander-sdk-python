@@ -77,11 +77,20 @@ def build_credentials_namespace(
     client_secret: str = "",
     auth_string: str = "",
     grant_type: str = "",
+    auth_base_url: str = "",
 ) -> str:
     """Fingerprint a set of credentials as a short, stable key for a shared token file."""
     material = "".join(
         f"{len(value)}:{value}"
-        for value in ("v3", base_url, client_id, client_secret, auth_string, grant_type)
+        for value in (
+            "v4",
+            base_url,
+            client_id,
+            client_secret,
+            auth_string,
+            grant_type,
+            auth_base_url,
+        )
     )
     digest = hashlib.sha256(material.encode("utf-8"))
     return digest.hexdigest()[:16]

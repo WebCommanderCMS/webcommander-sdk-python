@@ -185,7 +185,8 @@ _HINTS_BY_STATUS: dict[int, str] = {
     ),
     401: (
         "credentials were rejected, or the token expired and could not be "
-        "renewed - check client_id, client_secret and auth_string"
+        "renewed - check client_id, client_secret and auth_string, or auth_base_url "
+        "for a Hykmah client"
     ),
     403: "authenticated, but this client is not allowed to do that",
     404: "no such record - check the id you passed actually exists",

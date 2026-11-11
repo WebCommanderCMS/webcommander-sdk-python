@@ -21,6 +21,8 @@ from webcommander.http.transport import Transport
 from webcommander.redaction import redact_fields, redact_mapping, redact_snapshot
 
 TOKEN_PATH_TEMPLATE = "/api/{api_version}/oauth2/token"
+#: The token path on the Hykmah origin set as ``auth_base_url``.
+HYKMAH_TOKEN_PATH = "/api/v1/oauth/token"
 DEFAULT_TOKEN_TTL_SECONDS = 3600
 EXPIRY_SKEW_SECONDS = 60
 
@@ -155,13 +157,19 @@ class TokenProvider:
         self._config = config
         self._transport = transport
         self._token_store = token_store
-        self._token_path = token_path or build_token_path(config.api_version)
+        self._uses_hykmah = config.auth_base_url is not None
+        default_path = (
+            HYKMAH_TOKEN_PATH if self._uses_hykmah else build_token_path(config.api_version)
+        )
+        self._token_path = token_path or default_path
+        self._token_base_url = config.auth_base_url if self._uses_hykmah else config.base_url
         self._thread_lock = threading.Lock()
 
     @property
     def token_url(self) -> str:
-        """The absolute token endpoint URL: base URL joined with the token path."""
-        return self._config.base_url + self._token_path
+        """The absolute token endpoint URL: the Hykmah origin when ``auth_base_url`` is set,
+        otherwise the store's base URL, joined with the token path."""
+        return self._token_base_url + self._token_path
 
     def get_access_token(self) -> str:
         """Return a usable bearer token, fetching one only if needed."""
@@ -207,22 +215,20 @@ class TokenProvider:
                 return new_record.access_token
 
     def _request_token_with_credentials(self) -> TokenRecord:
-        response = self._transport.send_http_request(
-            "POST",
-            self.token_url,
-            json_body=self._grant_payload(
+        if self._uses_hykmah:
+            response = self._send_token_request(grant_type=self._config.grant_type)
+            checked = "client_id, client_secret, grant_type and auth_base_url"
+        else:
+            response = self._send_token_request(
                 grant_type=self._config.grant_type, auth_string=self._config.auth_string
-            ),
-            headers=self._token_headers(),
-            endpoint_template=TOKEN_PATH_TEMPLATE,
-        )
+            )
+            checked = "client_id, client_secret, auth_string and grant_type"
         if not response.succeeded:
             messages = response.get_error_messages()
             # Counted, not quoted: an OAuth2 failure body may echo the rejected request.
             reported = f"{len(messages)} problem(s) reported" if messages else "no detail reported"
             error = SdkAuthError(
-                f"the token endpoint answered {response.status_code}, {reported}; check "
-                f"client_id, client_secret, auth_string and grant_type",
+                f"the token endpoint answered {response.status_code}, {reported}; check {checked}",
                 status_code=response.status_code,
                 error_type=response.error_type,
                 raw_response=redact_snapshot(response.map),
@@ -234,23 +240,33 @@ class TokenProvider:
             raise error
         return self._build_token_record(response.map, response)
 
-    def _grant_payload(self, **grant: str) -> dict[str, Any]:
-        return {
-            **grant,
-            "redirect_uri": self._config.redirect_uri,
+    def _send_token_request(self, **grant: str) -> Any:
+        """POST one grant: a form to Hykmah, which refuses JSON, or JSON with the redirect URI
+        to the store."""
+        client = {
             "client_id": self._config.client_id,
             "client_secret": self._config.client_secret,
         }
-
-    def _request_token_with_refresh_grant(self, refresh_token: str) -> TokenRecord | None:
-        payload = self._grant_payload(grant_type=_REFRESH_GRANT_TYPE, refresh_token=refresh_token)
-        try:
-            response = self._transport.send_http_request(
+        if self._uses_hykmah:
+            return self._transport.send_http_request(
                 "POST",
                 self.token_url,
-                json_body=payload,
+                form_data={**grant, **client},
                 headers=self._token_headers(),
-                endpoint_template=TOKEN_PATH_TEMPLATE,
+                endpoint_template=HYKMAH_TOKEN_PATH,
+            )
+        return self._transport.send_http_request(
+            "POST",
+            self.token_url,
+            json_body={**grant, "redirect_uri": self._config.redirect_uri, **client},
+            headers={**self._token_headers(), "Content-Type": "application/json"},
+            endpoint_template=TOKEN_PATH_TEMPLATE,
+        )
+
+    def _request_token_with_refresh_grant(self, refresh_token: str) -> TokenRecord | None:
+        try:
+            response = self._send_token_request(
+                grant_type=_REFRESH_GRANT_TYPE, refresh_token=refresh_token
             )
         except SdkError:
             # An expired refresh token is an ordinary outcome, so fall back to the full grant.
@@ -266,7 +282,6 @@ class TokenProvider:
 
     def _token_headers(self) -> dict[str, str]:
         return {
-            "Content-Type": "application/json",
             "Accept": "application/json",
             "User-Agent": self._config.user_agent,
         }

@@ -53,9 +53,31 @@ with build_client() as client:
 The client authenticates on the first call, caches the token and renews it before it expires.
 To load a `.env` file, call `load_dotenv()` yourself before building the `AuthConfig`.
 
+### Hykmah sign-in
+
+A store whose API client was issued through Hykmah gets its token from Hykmah instead of from
+the store. Pass the Hykmah address as `auth_base_url`; `redirect_uri` and `auth_string` are
+not needed:
+
+```python
+register_instances([
+    AuthConfig(
+        client_name="default",
+        base_url=os.environ["WC_BASE_URL"],
+        client_id=os.environ["WC_CLIENT_ID"],
+        client_secret=os.environ["WC_CLIENT_SECRET"],
+        auth_base_url=os.environ["WC_AUTH_BASE_URL"],
+    ),
+])
+```
+
+Only the token request goes to `auth_base_url`. Every API call still goes to `base_url`. Leave
+`auth_base_url` unset to get the token from the store with `redirect_uri` and `auth_string`.
+
 ## Configuration
 
-Credentials are an `AuthConfig`. Behaviour is set with keyword arguments to `build_client`.
+Credentials are an `AuthConfig`: the five credentials may be passed by position, everything
+after them by keyword. Behaviour is set with keyword arguments to `build_client`.
 Every setting has a default; `raise_on_error` defaults to `False` and `response_format` to
 `"map"`:
 
