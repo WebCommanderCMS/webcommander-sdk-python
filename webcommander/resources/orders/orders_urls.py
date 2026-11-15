@@ -16,9 +16,8 @@ ORDER_SHIPMENTS = "/api/{api_version}/admin/orders/{order_id}/shipments"
 ORDER_SHIPMENT = "/api/{api_version}/admin/orders/{order_id}/shipments/{shipment_id}"
 ORDER_UPDATE_STATUS = "/api/{api_version}/admin/orders/{order_id}/update-status"
 
-#: These two take the order's ``internal_id``.
-ORDER_CUSTOM_FIELDS = "/api/{api_version}/admin/orders/{order_internal_id}/custom_fields"
-ORDER_SEND_INVOICE = "/api/{api_version}/admin/orders/{order_internal_id}/send-invoice"
+ORDER_CUSTOM_FIELDS = "/api/{api_version}/admin/orders/{order_id}/custom_fields"
+ORDER_SEND_INVOICE = "/api/{api_version}/admin/orders/{order_id}/send-invoice"
 
 PAYMENT_REFUNDS = "/api/{api_version}/admin/payment/{payment_id}/refunds"
 ORDER_STATUS_ADD = "/api/{api_version}/admin/order/add-order-status"

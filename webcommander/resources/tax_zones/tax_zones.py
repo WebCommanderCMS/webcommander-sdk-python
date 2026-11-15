@@ -12,10 +12,8 @@ from webcommander.resources.tax_zones.tax_zones_dto import TaxZone, TaxZonePage
 
 __all__ = [
     "list_tax_zones",
-    "head_tax_zones",
     "create_tax_zone",
     "get_tax_zone",
-    "head_tax_zone",
     "update_tax_zone",
     "delete_tax_zone",
 ]
@@ -37,21 +35,6 @@ def list_tax_zones(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxZonePage,
-    )
-
-
-def head_tax_zones(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/tax_zones``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        tax_zones_urls.TAX_ZONES,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -88,24 +71,6 @@ def get_tax_zone(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxZone,
-    )
-
-
-def head_tax_zone(
-    client: Any,
-    tax_zone_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one tax zone is there — ``HEAD /admin/tax_zones/{tax_zone_id}``; no body.
-    An id no row holds is ``200`` too, so this does not prove the row exists."""
-    return client.send_api_request(
-        "HEAD",
-        tax_zones_urls.TAX_ZONE,
-        path_params={"tax_zone_id": tax_zone_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

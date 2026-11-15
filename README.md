@@ -189,11 +189,12 @@ Every exception the SDK raises is an `SdkError` subclass.
 
 ## Resources
 
-The client exposes 56 resources with 436 operations. The method, path and behaviour of each
+The client exposes 56 resources with 435 operations. The method, path and behaviour of each
 one are in the [API reference](https://newlify.mintlify.app).
 
 | Resource | Client accessor | Operations |
 |---|---|---:|
+| Admin carts | `client.admin_carts` | 19 |
 | Customers | `client.admin_customers` | 15 |
 | Aliases | `client.aliases` | 4 |
 | Animation effects settings | `client.animation_effects` | 7 |
@@ -218,10 +219,9 @@ one are in the [API reference](https://newlify.mintlify.app).
 | Ecommerce settings | `client.ecommerce_settings` | 5 |
 | Email | `client.email` | 1 |
 | Gift cards | `client.gift_cards` | 1 |
-| Inventory locations | `client.inventory_locations` | 11 |
+| Inventory locations | `client.inventory_locations` | 9 |
 | Order custom fields | `client.order_custom_fields` | 4 |
-| Order flags | `client.order_flags` | 7 |
-| Order previews | `client.order_previews` | 7 |
+| Order flags | `client.order_flags` | 5 |
 | Orders | `client.orders` | 25 |
 | Pages | `client.pages` | 15 |
 | Payment gateways | `client.payment_gateways` | 8 |
@@ -232,21 +232,21 @@ one are in the [API reference](https://newlify.mintlify.app).
 | Search result page settings | `client.search_result_page` | 14 |
 | Search settings | `client.search_settings` | 9 |
 | SEO configuration | `client.seo_configuration` | 18 |
-| Shipping classes | `client.shipping_classes` | 9 |
-| Shipping methods | `client.shipping_methods` | 9 |
+| Shipping classes | `client.shipping_classes` | 7 |
+| Shipping methods | `client.shipping_methods` | 7 |
 | Shipping profiles | `client.shipping_profiles` | 11 |
 | Shipping rates | `client.shipping_rates` | 10 |
 | Shipping rules | `client.shipping_rules` | 10 |
 | Shipping settings | `client.shipping_settings` | 3 |
 | Shopping cart settings | `client.shopping_cart` | 5 |
 | Site settings | `client.site_settings` | 5 |
-| Tax codes | `client.tax_codes` | 7 |
+| Tax codes | `client.tax_codes` | 5 |
 | Tax country taxes | `client.tax_country_taxes` | 5 |
 | Tax custom profiles | `client.tax_custom_profiles` | 5 |
-| Tax profiles | `client.tax_profiles` | 7 |
-| Tax rules | `client.tax_rules` | 7 |
+| Tax profiles | `client.tax_profiles` | 5 |
+| Tax rules | `client.tax_rules` | 5 |
 | Tax settings | `client.tax_settings` | 4 |
-| Tax zones | `client.tax_zones` | 7 |
+| Tax zones | `client.tax_zones` | 5 |
 | Transactions | `client.transactions` | 6 |
 | Trash | `client.trash` | 9 |
 | Variations | `client.variations` | 16 |

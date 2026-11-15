@@ -13,10 +13,8 @@ from webcommander.resources.tax_profiles.tax_profiles_dto import TaxProfile, Tax
 
 __all__ = [
     "list_tax_profiles",
-    "head_tax_profiles",
     "create_tax_profile",
     "get_tax_profile",
-    "head_tax_profile",
     "update_tax_profile",
     "delete_tax_profile",
 ]
@@ -38,21 +36,6 @@ def list_tax_profiles(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxProfilePage,
-    )
-
-
-def head_tax_profiles(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/tax_profiles``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        tax_profiles_urls.TAX_PROFILES,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -89,24 +72,6 @@ def get_tax_profile(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxProfile,
-    )
-
-
-def head_tax_profile(
-    client: Any,
-    tax_profile_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one tax profile is there — ``HEAD /admin/tax_profiles/{tax_profile_id}``.
-    An id no row holds is ``200`` too, so this does not prove the row exists."""
-    return client.send_api_request(
-        "HEAD",
-        tax_profiles_urls.TAX_PROFILE,
-        path_params={"tax_profile_id": tax_profile_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

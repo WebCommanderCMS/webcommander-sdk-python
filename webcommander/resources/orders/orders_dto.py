@@ -17,7 +17,7 @@ class Reference(Dto):
 
 class OrderCustomer(Dto):
     """The order's ``customer`` section, also sent as ``customer_summary``. A listing row
-    carries five of these keys; ``customer_id`` is the public id, ``internal_id`` the other."""
+    carries five of these keys. Paths and filters take ``customer_id``; ``internal_id`` is for reference."""
 
     first_name: str | None = None
     last_name: str | None = None
@@ -319,10 +319,10 @@ class OrderCommentList(Dto):
 
 
 class OrderCustomFields(Dto):
-    """An order's custom field values; ``order_id`` echoes the ``internal_id`` asked for, and a
-    ``delivery`` order adds ``delivery_cost``."""
+    """An order's custom field values; a ``delivery`` order adds ``delivery_cost``."""
 
     order_id: int | None = None
+    internal_id: int | None = None
     custom_fields: list[Any] | None = None
     delivery_cost: float | None = None
 
@@ -385,7 +385,7 @@ class OrderRefundRecordLine(Dto):
 
 
 class OrderRefundRecord(Dto):
-    """One refund an order holds. ``order_id`` is the order's internal id. A payment refund fills
+    """One refund an order holds. A payment refund fills
     ``record_only`` to ``lines``; an order refund leaves them ``null`` and ``lines`` empty.
     ``gateway_charge_id``, ``gateway_refund_id`` and ``failure_cause`` were ``null`` on every
     refund read, so they are not typed."""
@@ -414,23 +414,24 @@ class OrderRefundRecord(Dto):
 
 
 class OrderRefundPage(Dto):
-    """One page of an order's refunds, newest first. ``order_id`` is the order's internal id and
-    ``order_no`` the ``{order_id}`` the path took."""
+    """One page of an order's refunds, newest first; ``order_no`` equals ``order_id``."""
 
     order_id: int | None = None
+    internal_id: int | None = None
     order_no: int | None = None
     refunds: list[OrderRefundRecord | None] | None = None
     pagination: Pagination | None = None
 
 
 class PaymentRefund(Dto):
-    """What a payment refund answers. ``order_id`` holds the order's internal id and ``order_no``
-    its order id; a replay drops four flags and adds ``idempotent_replay``."""
+    """What a payment refund answers; ``order_no`` equals ``order_id``. A replay drops four flags and
+    adds ``idempotent_replay``."""
 
     status: str | None = None
     refund_id: int | None = None
     payment_id: int | None = None
     order_id: int | None = None
+    internal_id: int | None = None
     order_no: int | None = None
     currency: str | None = None
     amount: float | None = None

@@ -141,7 +141,7 @@ class CartAddressInput(Dto):
 
 
 class CartItemInput(Dto):
-    """The add's body, no envelope; ``customer_id`` takes the customer's ``internal_id``."""
+    """The add's body, no envelope; ``customer_id`` takes the customer's ``customer_id``."""
 
     product_id: int | None = None
     quantity: int | None = None

@@ -20,6 +20,7 @@ __all__ = [
 ]
 
 _RESOURCE_MODULES: dict[str, str] = {
+    "admin_carts": "webcommander.resources.carts.admin_carts",
     "admin_customers": "webcommander.resources.customers.admin_customers",
     "aliases": "webcommander.resources.aliases.aliases",
     "animation_effects": "webcommander.resources.settings.animation_effects.animation_effects",
@@ -47,7 +48,6 @@ _RESOURCE_MODULES: dict[str, str] = {
     "inventory_locations": "webcommander.resources.inventory_locations.inventory_locations",
     "order_custom_fields": "webcommander.resources.order_custom_fields.order_custom_fields",
     "order_flags": "webcommander.resources.order_flags.order_flags",
-    "order_previews": "webcommander.resources.order_previews.order_previews",
     "orders": "webcommander.resources.orders.orders",
     "pages": "webcommander.resources.pages.pages",
     "payment_gateways": "webcommander.resources.payment_gateways.payment_gateways",

@@ -42,9 +42,11 @@ class BlogAuthor(Dto):
 
 
 class BlogAudienceMember(Dto):
-    """One customer, by ``internal_id``, or one customer group a restricted blog is shown to."""
+    """One customer, by ``customer_id``, or one customer group a restricted blog is shown to.
+    A customer also carries its ``internal_id``, for reference."""
 
     id: int | None = None
+    internal_id: int | None = None
     name: str | None = None
 
 
@@ -56,8 +58,7 @@ class BlogAudience(Dto):
 
 
 class BlogAudienceInput(Dto):
-    """The audience a write names: customer ``internal_id`` values and customer group ids. A
-    ``customer_id`` is dropped without a refusal."""
+    """The audience a write names: customer ``customer_id`` values and customer group ids."""
 
     customers: list[int | None] | None = None
     groups: list[int | None] | None = None

@@ -32,8 +32,8 @@ class ProductParent(Dto):
 
 
 class ProductSelectedCustomer(Dto):
-    """One customer an audience names: ``id`` is the customer's ``customer_id``, ``internal_id``
-    its ``internal_id``."""
+    """One customer an audience names: ``id`` is the customer's ``customer_id``; ``internal_id``
+    is for reference."""
 
     id: int | None = None
     internal_id: int | None = None

@@ -12,10 +12,8 @@ from webcommander.resources.tax_codes.tax_codes_dto import TaxCode, TaxCodePage
 
 __all__ = [
     "list_tax_codes",
-    "head_tax_codes",
     "create_tax_code",
     "get_tax_code",
-    "head_tax_code",
     "update_tax_code",
     "delete_tax_code",
 ]
@@ -37,21 +35,6 @@ def list_tax_codes(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxCodePage,
-    )
-
-
-def head_tax_codes(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/tax_codes``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        tax_codes_urls.TAX_CODES,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -88,24 +71,6 @@ def get_tax_code(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxCode,
-    )
-
-
-def head_tax_code(
-    client: Any,
-    tax_code_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one tax code is there — ``HEAD /admin/tax_codes/{tax_code_id}``; no body.
-    An id no row holds is ``200`` too; use :func:`get_tax_code` to learn whether it exists."""
-    return client.send_api_request(
-        "HEAD",
-        tax_codes_urls.TAX_CODE,
-        path_params={"tax_code_id": tax_code_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

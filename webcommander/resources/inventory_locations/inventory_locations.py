@@ -16,10 +16,8 @@ from webcommander.resources.required_bodies import require_payload
 
 __all__ = [
     "list_inventory_locations",
-    "head_inventory_locations",
     "create_inventory_location",
     "get_inventory_location",
-    "head_inventory_location",
     "update_inventory_location",
     "patch_inventory_location",
     "delete_inventory_location",
@@ -46,21 +44,6 @@ def list_inventory_locations(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=InventoryLocationPage,
-    )
-
-
-def head_inventory_locations(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/inventory_locations``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        inventory_locations_urls.INVENTORY_LOCATIONS,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -97,24 +80,6 @@ def get_inventory_location(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=InventoryLocation,
-    )
-
-
-def head_inventory_location(
-    client: Any,
-    inventory_location_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one location is there; no body.
-    ``HEAD /admin/inventory_locations/{inventory_location_id}``"""
-    return client.send_api_request(
-        "HEAD",
-        inventory_locations_urls.INVENTORY_LOCATION,
-        path_params={"inventory_location_id": inventory_location_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

@@ -6,9 +6,9 @@ from webcommander.dto import Dto
 
 
 class GiftCard(Dto):
-    """One gift card. ``code`` is what an order preview's ``gift-card`` call takes; a card can be
+    """One gift card. ``code`` is what a checkout's ``gift_card`` call takes; a card can be
     applied only while ``is_active`` and ``is_paid``, with a ``balance`` above zero, before its
-    ``available_to`` date and with ``email`` equal to the previewed customer's email."""
+    ``available_to`` date and with ``email`` equal to the cart customer's email."""
 
     id: int | None = None
     code: str | None = None

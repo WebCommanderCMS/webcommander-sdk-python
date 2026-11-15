@@ -31,7 +31,7 @@ def add_cart_item(
     response_format: str | None = None,
 ) -> ApiResponse[Cart]:
     """Add a product to the cart ``session_id`` names, creating it — ``POST /carts``, ``201``;
-    re-adding raises the line's quantity. ``customer_id`` is the customer's ``internal_id``."""
+    re-adding raises the line's quantity. ``customer_id`` is the customer's ``customer_id``."""
     require_payload(payload)
     return client.send_post_request(
         carts_urls.CARTS,
@@ -146,7 +146,7 @@ def create_order_from_cart(
     response_format: str | None = None,
 ) -> ApiResponse[CartOrder]:
     """Turn the cart into an order — ``POST /admin/orders/carts/{session_id}``, ``201``, and the
-    cart is gone. ``customer_id`` is the customer's ``customer_id``, not its ``internal_id``.
+    cart is gone. ``customer_id`` is the customer's ``customer_id``.
     ``transaction_no`` is sent as ``X-Transaction-No`` and files the order under that number."""
     require_payload(payload)
     return client.send_post_request(

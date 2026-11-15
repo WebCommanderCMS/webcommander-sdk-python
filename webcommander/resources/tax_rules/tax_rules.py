@@ -13,10 +13,8 @@ from webcommander.resources.tax_rules.tax_rules_dto import TaxRule, TaxRulePage
 
 __all__ = [
     "list_tax_rules",
-    "head_tax_rules",
     "create_tax_rule",
     "get_tax_rule",
-    "head_tax_rule",
     "update_tax_rule",
     "delete_tax_rule",
 ]
@@ -38,21 +36,6 @@ def list_tax_rules(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxRulePage,
-    )
-
-
-def head_tax_rules(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/tax_rules``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        tax_rules_urls.TAX_RULES,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -89,24 +72,6 @@ def get_tax_rule(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=TaxRule,
-    )
-
-
-def head_tax_rule(
-    client: Any,
-    tax_rule_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one tax rule is there — ``HEAD /admin/tax_rules/{tax_rule_id}``; no body.
-    An id no row holds is ``200`` too, so this does not prove the row exists."""
-    return client.send_api_request(
-        "HEAD",
-        tax_rules_urls.TAX_RULE,
-        path_params={"tax_rule_id": tax_rule_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

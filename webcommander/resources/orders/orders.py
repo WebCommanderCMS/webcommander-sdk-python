@@ -67,7 +67,7 @@ def list_orders(
     response_format: str | None = None,
 ) -> ApiResponse[OrderPage]:
     """List orders — ``GET /admin/orders``, newest first; cancelled only under ``order_status``.
-    ``limit`` caps at 20, ``customerId`` takes an ``internal_id``, an unknown name is ``400``."""
+    ``limit`` caps at 20, ``customerId`` takes a ``customer_id``, an unknown name is ``400``."""
     return client.send_get_request(
         orders_urls.ORDERS,
         query_params=query_params,
@@ -299,16 +299,15 @@ def create_order_comment(
 
 def get_order_custom_fields(
     client: Any,
-    order_internal_id: int | str,
+    order_id: int | str,
     *,
     raise_on_error: bool | None = None,
     response_format: str | None = None,
 ) -> ApiResponse[OrderCustomFields]:
-    """An order's custom field values — ``GET /admin/orders/{order_internal_id}/custom_fields``.
-    Pass ``internal_id``: an ``order_id`` there reads the order whose ``internal_id`` it is."""
+    """An order's custom field values — ``GET /admin/orders/{order_id}/custom_fields``."""
     return client.send_get_request(
         orders_urls.ORDER_CUSTOM_FIELDS,
-        path_params={"order_internal_id": order_internal_id},
+        path_params={"order_id": order_id},
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=OrderCustomFields,
@@ -403,16 +402,15 @@ def create_payment_refund(
 
 def send_order_invoice(
     client: Any,
-    order_internal_id: int | str,
+    order_id: int | str,
     *,
     raise_on_error: bool | None = None,
     response_format: str | None = None,
 ) -> ApiResponse[InvoiceDispatch]:
-    """Email the invoice — ``POST /admin/orders/{order_internal_id}/send-invoice``; no body. Pass
-    ``internal_id``: an ``order_id`` there names the order holding it as its ``internal_id``."""
+    """Email the invoice — ``POST /admin/orders/{order_id}/send-invoice``; no body."""
     return client.send_post_request(
         orders_urls.ORDER_SEND_INVOICE,
-        path_params={"order_internal_id": order_internal_id},
+        path_params={"order_id": order_id},
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=InvoiceDispatch,

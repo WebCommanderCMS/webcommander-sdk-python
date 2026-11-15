@@ -16,11 +16,9 @@ from webcommander.resources.shipping_methods.shipping_methods_dto import (
 
 __all__ = [
     "list_shipping_methods",
-    "head_shipping_methods",
     "count_shipping_methods",
     "create_shipping_method",
     "get_shipping_method",
-    "head_shipping_method",
     "update_shipping_method",
     "delete_shipping_method",
     "set_shipping_method_default",
@@ -44,21 +42,6 @@ def list_shipping_methods(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=ShippingMethodPage,
-    )
-
-
-def head_shipping_methods(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/shipping_methods``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        shipping_methods_urls.SHIPPING_METHODS,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -115,24 +98,6 @@ def get_shipping_method(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=ShippingMethod,
-    )
-
-
-def head_shipping_method(
-    client: Any,
-    shipping_method_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one method is there — ``HEAD /admin/shipping_methods/{shipping_method_id}``.
-    An id no method holds is ``200`` too, so this is no existence check."""
-    return client.send_api_request(
-        "HEAD",
-        shipping_methods_urls.SHIPPING_METHOD,
-        path_params={"shipping_method_id": shipping_method_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

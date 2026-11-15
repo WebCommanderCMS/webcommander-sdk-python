@@ -61,8 +61,7 @@ def get_customer(
     raise_on_error: bool | None = None,
     response_format: str | None = None,
 ) -> ApiResponse[Customer]:
-    """Retrieve one customer — ``GET /admin/customers/{customer_id}``. Pass ``customer_id``,
-    not ``internal_id``: the other id space answers 404, or someone else's customer."""
+    """Retrieve one customer — ``GET /admin/customers/{customer_id}``."""
     return client.send_get_request(
         admin_customers_urls.ADMIN_CUSTOMER,
         path_params={"customer_id": customer_id},

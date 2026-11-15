@@ -16,11 +16,9 @@ from webcommander.resources.shipping_classes.shipping_classes_dto import (
 
 __all__ = [
     "list_shipping_classes",
-    "head_shipping_classes",
     "count_shipping_classes",
     "create_shipping_class",
     "get_shipping_class",
-    "head_shipping_class",
     "update_shipping_class",
     "delete_shipping_class",
     "set_shipping_class_default",
@@ -44,21 +42,6 @@ def list_shipping_classes(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=ShippingClassPage,
-    )
-
-
-def head_shipping_classes(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection answers — ``HEAD /admin/shipping_classes``; 200 with no body."""
-    return client.send_api_request(
-        "HEAD",
-        shipping_classes_urls.SHIPPING_CLASSES,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -116,24 +99,6 @@ def get_shipping_class(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=ShippingClass,
-    )
-
-
-def head_shipping_class(
-    client: Any,
-    shipping_class_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether a class's path answers — ``HEAD /admin/shipping_classes/{shipping_class_id}``;
-    200 for an id the ``GET`` answers 404, so it confirms the path and not the row."""
-    return client.send_api_request(
-        "HEAD",
-        shipping_classes_urls.SHIPPING_CLASS,
-        path_params={"shipping_class_id": shipping_class_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 

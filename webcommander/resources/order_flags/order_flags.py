@@ -12,10 +12,8 @@ from webcommander.resources.required_bodies import require_payload
 
 __all__ = [
     "list_order_flags",
-    "head_order_flags",
     "create_order_flag",
     "get_order_flag",
-    "head_order_flag",
     "update_order_flag",
     "delete_order_flag",
 ]
@@ -38,21 +36,6 @@ def list_order_flags(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=OrderFlagPage,
-    )
-
-
-def head_order_flags(
-    client: Any,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether the collection is reachable — ``HEAD /admin/order_flags``; no ``ETag``."""
-    return client.send_api_request(
-        "HEAD",
-        order_flags_urls.ORDER_FLAGS,
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
@@ -89,23 +72,6 @@ def get_order_flag(
         raise_on_error=raise_on_error,
         response_format=response_format,
         dto_type=OrderFlag,
-    )
-
-
-def head_order_flag(
-    client: Any,
-    order_flag_id: int | str,
-    *,
-    raise_on_error: bool | None = None,
-    response_format: str | None = None,
-) -> ApiResponse:
-    """Ask whether one flag is there — ``HEAD /admin/order_flags/{order_flag_id}``; no body."""
-    return client.send_api_request(
-        "HEAD",
-        order_flags_urls.ORDER_FLAG,
-        path_params={"order_flag_id": order_flag_id},
-        raise_on_error=raise_on_error,
-        response_format=response_format,
     )
 
 
