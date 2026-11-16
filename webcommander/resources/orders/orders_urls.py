@@ -26,5 +26,5 @@ CUSTOMER_ORDERS = "/api/{api_version}/admin/customers/{customer_id}/orders"
 #: The header a payment refund is refused without; a repeat under one key replays the first.
 IDEMPOTENCY_KEY_HEADER = "Idempotency-Key"
 
-#: Files a created order under this transaction number; it beats a ``transaction_no`` body field.
+#: Files a created order under this transaction number; a differing top-level ``transaction_no`` is ``400 header_body_mismatch``.
 TRANSACTION_NO_HEADER = "X-Transaction-No"

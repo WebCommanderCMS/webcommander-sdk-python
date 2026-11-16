@@ -14,5 +14,5 @@ ADMIN_CHECKOUT_DELIVERY_SCHEDULES = (
     "/api/{api_version}/admin/orders/checkout/{session_id}/delivery_schedules"
 )
 
-#: Files the order a checkout places under this transaction number; it beats ``transaction_no``.
+#: Files the order a checkout places under this transaction number; a differing top-level ``transaction_no`` is ``400 header_body_mismatch``.
 TRANSACTION_NO_HEADER = "X-Transaction-No"
